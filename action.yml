@@ -8,6 +8,20 @@ runs:
       with:
         python-version: 3.7 # Cairo was tested with this version
 
+    - name: Gen Cache Id
+      run: |
+        echo "::set-output name=timestamp::$(date '+%s')"
+      id: cache-id
+      shell: sh
+
+    - name: Cache poetry
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/pypoetry
+        key: poetry-cache-${{ steps.cache-id.outputs.timestamp }}
+        restore-keys: |
+          poetry-cache-
+
     - name: Install dependencies
       run: >
         sudo add-apt-repository ppa:ethereum/ethereum
